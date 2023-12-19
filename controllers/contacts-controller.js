@@ -4,8 +4,6 @@ import { HttpError, ctrlWrapper } from "../helpers/index.js";
 
 import { addSchema } from "../schemas/contact-schemas.js";
 
-
-
 const listContacts = async (req, res, next) => {
     try {
         const result = await contactsService.getListContacts();

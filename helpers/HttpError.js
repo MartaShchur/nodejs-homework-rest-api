@@ -1,4 +1,4 @@
-const errorMessageList = {
+const messageList = {
   400: "Bad Request",
   401: "Not authorized",
   403: "Forbidden",
@@ -6,10 +6,10 @@ const errorMessageList = {
   409: "Conflict",
 };
 
-const HttpError = (status, message = errorMessageList[status]) => {
-  const error = new Error(message);
-  error.status = status;
-  return error;
-};
+const HttpError = (status, message = messageList[status])=> {
+    const error = new Error(message);
+    error.status = status;
+    return error;
+}
 
 export default HttpError;
