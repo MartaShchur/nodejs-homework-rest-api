@@ -2,7 +2,7 @@ import * as contactsService from "../models/contacts.js";
 
 import { HttpError, ctrlWrapper } from "../helpers/index.js";
 
-import { addSchema } from "../schemas/contact-schemas.js";
+
 
 const listContacts = async (req, res, next) => {
     try {
@@ -30,10 +30,7 @@ const getById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
     try {
-        const { error } = addSchema.validate(req.body);
-        if (error) {
-            throw HttpError(400, "missing required name field");
-        }
+
         const result = await contactsService.addContact(req.body);
         res.status(201).json(result)
     }
@@ -44,17 +41,15 @@ const add = async (req, res, next) => {
 
 const updateById = async (req, res, next) => {
     try {
-        const { error } = addSchema.validate(req.body);
-        if (error) {
-            throw HttpError(400, "missing fields");
-        }
         const { id } = req.params;
         const result = await contactsService.updateContactById(id, req.body);
         if (!result) {
             throw HttpError(404, `Not found`);
         }
 
-        res.json(result);
+        res.json({
+          message: 'contact updated',
+  });
     }
     catch (error) {
         next(error);
