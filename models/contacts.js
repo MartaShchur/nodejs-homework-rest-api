@@ -32,27 +32,25 @@ export const removeContact = async (id) => {
     return result;
 };
 
-export const addContact = async (name, email, phone) => {
+export const addContact = async (body) => {
     // ...твій код. Повертає об'єкт доданого контакту.
     const contacts = await getListContacts();
     const newContact = {
         id: nanoid(),
-        name,
-        email,
-        phone,
+        ...body
     };
     contacts.push(newContact);
     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     return newContact;
 };
 
-export const updateContactById = async (id, name, email, phone) => {
+export const updateContactById = async (id, body) => {
     const contacts = await getListContacts();
     const index = contacts.findIndex(item => item.id === id);
     if (index === -1) {
         return null;
     }
-    contacts[index] = { ...contacts[index], name, email, phone };
+    contacts[index] = { ...contacts[index], ...body };
     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     return contacts[index];
 };
