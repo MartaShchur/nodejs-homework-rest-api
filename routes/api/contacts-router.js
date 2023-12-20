@@ -4,7 +4,8 @@ import contactsController from "../../controllers/contacts-controller.js";
 
 import {isEmptyBody, validateBody} from "../../middlewares/index.js";
 
-import {addSchema} from "../../schemas/contact-schemas.js"
+import {contactsAddSchema,
+  contactsUpdadeSchema,} from "../../schemas/contact-schemas.js"
 
 
 
@@ -14,9 +15,9 @@ contactsRouter.get("/", contactsController.getListContacts);
 
 contactsRouter.get("/:id", contactsController.getContactById);
 
-contactsRouter.post("/", isEmptyBody, validateBody(addSchema), contactsController.addContact);
+contactsRouter.post("/", isEmptyBody, validateBody(contactsAddSchema), contactsController.addContact);
 
-contactsRouter.put("/:id", isEmptyBody, validateBody(addSchema), contactsController.updateContactById);
+contactsRouter.put("/:id", isEmptyBody, validateBody(contactsUpdadeSchema), contactsController.updateContactById);
 
 contactsRouter.delete("/:id", contactsController.removeContact)
 
