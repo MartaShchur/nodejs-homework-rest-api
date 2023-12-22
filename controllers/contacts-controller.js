@@ -1,4 +1,4 @@
-// import * as contactsService from "../models/contacts.js";
+
 import Contact from "../models/Contact.js";
 
 import { HttpError, ctrlWrapper } from "../helpers/index.js";
@@ -13,20 +13,21 @@ const listContacts = async (req, res, next) => {
     }
 };
 
-// const getById = async (req, res, next) => {
-//     try {
-//         const { id } = req.params;
-//         const result = await contactsService.getContactById(id);
-//         if (!result) {
-//             throw HttpError(404, `Not found`);
-//         }
-//         res.status(200).json(result);
-//     }
-//     catch (error) {
-//         next(error);
-//     }
-// };
+const getById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await Contact.findById(id);
+        if (!result) {
+            throw HttpError(404, `Not found`);
+        }
+        res.status(200).json(result);
+    }
+    catch (error) {
+        next(error);
+    }
+};
 
+// подивитися на постмані не працює
 const add = async (req, res, next) => {
     try {
         const result = await Contact.create(req.body);
@@ -40,41 +41,40 @@ const add = async (req, res, next) => {
     }
 };
 
-// const updateById = async (req, res, next) => {
-//     try {
-//         const result = await contactsService.updateContactById(req.params.id, req.body);
-//         if (!result) {
-//             throw HttpError(404, "Not found");
-//         }
+const updateById = async (req, res, next) => {
+    try {
+        const result = await Contact.findByIdAndUpdate(req.params.id, req.body);
+        if (!result) {
+            throw HttpError(404, "Not found");
+        }
 
-//         res.status(200).json(result);
-//     }
-//     catch (error) {
-//         next(error);
-//     }
-// }
+        res.status(200).json(result);
+    }
+    catch (error) {
+        next(error);
+    }
+}
 
-// const deleteById = async (req, res, next) => {
-//     try {
-     
-//         const result = await contactsService.removeContact(req.params.id);
-//         if (!result) {
-//             throw HttpError(404, `Not found`);
-//         }
+const deleteById = async (req, res, next) => {
+    try {
+        const result = await Contact.findByIdAndDelete(req.params.id);
+        if (!result) {
+            throw HttpError(404, `Not found`);
+        }
+        res.json({
+            message: "Сontact deleted",
+        })
+    }
 
-//         res.json({
-//             message: "Сontact deleted",
-//         })
-//     }
-//     catch (error) {
-//         next(error);
-//     }
-// };
+    catch (error) {
+        next(error);
+    }
+};
 
 export default {
     getListContacts: ctrlWrapper(listContacts),
     addContact: ctrlWrapper(add),
-//   getContactById: ctrlWrapper(getById),
-//   removeContact: ctrlWrapper(deleteById),
-//   updateContactById: ctrlWrapper(updateById),
+    getContactById: ctrlWrapper(getById),
+    removeContact: ctrlWrapper(deleteById),
+    updateContactById: ctrlWrapper(updateById),
 }
