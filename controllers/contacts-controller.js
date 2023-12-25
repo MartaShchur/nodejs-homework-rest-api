@@ -27,7 +27,6 @@ const getById = async (req, res, next) => {
     }
 };
 
-// подивитися на постмані не працює
 const add = async (req, res, next) => {
     try {
         const result = await Contact.create(req.body);
@@ -71,10 +70,20 @@ const deleteById = async (req, res, next) => {
     }
 };
 
+const updateStatusContact = async (req, res) => {
+  const { Id } = req.params;
+  if (!req.body) throw HttpError(400, "missing field favorite");
+  const result = await Contact.findByIdAndUpdate(Id, req.body);
+  if (!result) throw HttpError(404, "Not found");
+
+  res.status(200).json(result);
+};
+
 export default {
     getListContacts: ctrlWrapper(listContacts),
     addContact: ctrlWrapper(add),
     getContactById: ctrlWrapper(getById),
     removeContact: ctrlWrapper(deleteById),
     updateContactById: ctrlWrapper(updateById),
+    updateStatusContact:ctrlWrapper(updateStatusContact)
 }
