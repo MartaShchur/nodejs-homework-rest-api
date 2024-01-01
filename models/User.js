@@ -4,7 +4,8 @@ import Joi from "joi";
 import {handleSaveError, addUpdateSettings } from "./hooks.js";
 
 // Mongoose 
-const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+const subscriptions = ["starter", "pro", "business"];
 
 const userSchema = new Schema(
   {
@@ -23,7 +24,10 @@ const userSchema = new Schema(
 
     subscription: {
       type: String,
-      enum: ['starter', 'pro', 'business'],
+      enum: {
+        values: [...subscriptions],
+        message: `have only ${subscriptions.join(", ")}`,
+      },
       default: 'starter',
     },
 
@@ -46,7 +50,6 @@ userSchema.pre("findOneAndUpdate", addUpdateSettings);
 userSchema.post("findOneAndUpdate", handleSaveError);
 
 // Joi Schema
-
 
 export const userSignupSchema = Joi.object({
   email: Joi.string().pattern(emailRegex).required().messages({
