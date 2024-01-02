@@ -18,9 +18,14 @@ const contactSchema = new Schema({
     favorite: {
         type: Boolean,
         default: false,
-    },
-}, { versionKey: false, timestamps: true }
-);
+  },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
+  }
+    
+}, { versionKey: false, timestamps: true });
 
 contactSchema.post("save", handleSaveError);
 contactSchema.pre("findOneAndUpdate", addUpdateSettings);

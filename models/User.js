@@ -36,11 +36,6 @@ const userSchema = new Schema(
       default: '',
         },
     
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'user',
-        }
-    
   },
   { versionKey: false, timestamps: true }
 );

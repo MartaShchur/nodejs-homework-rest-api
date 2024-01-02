@@ -5,7 +5,8 @@ import contactsController from "../../controllers/contacts-controller.js";
 import {
   isEmptyBody,
   validateBody,
-  isValidId
+  isValidId,
+  authenticate
 } from "../../middlewares/index.js";
 
 import {contactsAddSchema,
@@ -15,6 +16,8 @@ import {contactsAddSchema,
 
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get("/", contactsController.getListContacts);
 
