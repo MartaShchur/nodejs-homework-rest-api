@@ -6,6 +6,7 @@ import { HttpError, ctrlWrapper } from "../helpers/index.js";
 
 const { JWT_SECRET } = process.env;
 
+
 const signup = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -42,21 +43,18 @@ const signin = async (req, res)=>{
     };
 
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '23h' });
-
-//   await User.findByIdAndUpdate(user._id, { token });
+  await User.findByIdAndUpdate(user._id, { token });
 
   res.status(200).json({
       token,
-    //    user: {
-    //   email: user.email,
-    //   subscription: user.subscription,
-    // },
+    
   });
     
 }
 
 const getCurrent = async (req, res) => {
   const { email, subscription } = req.user;
+
   res.status(200).json({
     email,
     subscription,
@@ -64,8 +62,20 @@ const getCurrent = async (req, res) => {
 };
 
 
+const signout = async(req, res)=> {
+    const {_id} = req.user;
+    const result = await User.findByIdAndUpdate(_id, { token: '' });
+
+  if (!result) {
+    throw HttpError(404, 'Not found');
+  }
+  res.status(204).json({});
+}
+
+
 export default {
     signup: ctrlWrapper(signup),
-    signin: ctrlWrapper(signin),
-    getCurrent:ctrlWrapper(getCurrent),
+  signin: ctrlWrapper(signin),
+  getCurrent: ctrlWrapper(getCurrent),
+    signout: ctrlWrapper(signout),
 }

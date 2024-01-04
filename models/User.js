@@ -5,29 +5,25 @@ import {handleSaveError, addUpdateSettings } from "./hooks.js";
 
 // Mongoose 
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const subscriptions = ["starter", "pro", "business"];
 
 const userSchema = new Schema(
   {
     email: {
       type: String,
       match: emailRegex,
-      required: [true, 'Set email for contact'],
+      required: [true, 'Email is required'],
       unique: true,
     },
 
     password: {
       type: String,
       minLength: 6,
-      required: [true, 'Set password for contact'],
+      required: [true, 'Set password for user'],
     },
 
     subscription: {
       type: String,
-      enum: {
-        values: [...subscriptions],
-        message: `have only ${subscriptions.join(", ")}`,
-      },
+      enum: ["starter", "pro", "business"],
       default: 'starter',
     },
 
