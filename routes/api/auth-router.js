@@ -21,7 +21,7 @@ authRouter.post("/signin",
   isEmptyBody, validateBody(userSigninSchema),
   authController.signin);
 
-authRouter.post("/current",
+authRouter.get("/current",
   authenticate,
   authController.getCurrent);
 
