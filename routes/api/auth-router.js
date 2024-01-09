@@ -4,7 +4,7 @@ import authController from "../../controllers/auth-controller.js";
 import {
   isEmptyBody,
   validateBody,
-  authenticate
+  authenticate, 
 } from "../../middlewares/index.js";
 
 import { userSignupSchema, userSigninSchema } from "../../models/User.js";

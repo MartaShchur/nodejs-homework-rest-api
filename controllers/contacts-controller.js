@@ -1,6 +1,5 @@
-
+import fs from "fs/promises";
 import Contact from "../models/Contact.js";
-
 import { HttpError, ctrlWrapper } from "../helpers/index.js";
 
 const listContacts = async (req, res, next) => {
@@ -36,8 +35,10 @@ const getById = async (req, res, next) => {
 
 const add = async (req, res, next) => {
     try {
-
         const { _id: owner } = req.user;
+        await fs.rename()
+
+
         const result = await Contact.create({...req.body, owner});
         if (!result) {
             throw HttpError(400, "missing required name field");
