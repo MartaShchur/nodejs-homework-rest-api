@@ -24,8 +24,9 @@ const contactSchema = new Schema({
     default: false,
   },
 
-   avatarURL: {
-      type: String,
+   avatar: {
+     type: String,
+     required: true,
     },
     
   owner: {
