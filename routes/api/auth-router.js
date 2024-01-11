@@ -4,7 +4,8 @@ import authController from "../../controllers/auth-controller.js";
 import {
   isEmptyBody,
   validateBody,
-  authenticate, 
+  authenticate,
+  upload
 } from "../../middlewares/index.js";
 
 import { userSignupSchema, userSigninSchema } from "../../models/User.js";
@@ -26,7 +27,7 @@ authRouter.get("/current",
   authController.getCurrent);
 
 authRouter.post("/signout", authenticate, authController.signout);
-
+authRouter.patch("/avatars",upload.single("avatar"),authenticate,authController.updateAvatar)
 
 
 

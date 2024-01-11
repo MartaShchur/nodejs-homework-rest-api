@@ -7,7 +7,7 @@ import {
   validateBody,
   isValidId,
   authenticate,
-  upload
+  
 } from "../../middlewares/index.js";
 
 import {contactsAddSchema,
@@ -24,7 +24,7 @@ contactsRouter.get("/", contactsController.getListContacts);
 
 contactsRouter.get("/:id", isValidId, contactsController.getContactById);
 
-contactsRouter.post("/", upload.single("avatars"), isEmptyBody, validateBody(contactsAddSchema), contactsController.addContact);
+contactsRouter.post("/", isEmptyBody, validateBody(contactsAddSchema), contactsController.addContact);
 
 contactsRouter.put("/:id", isValidId,  isEmptyBody, validateBody(contactsUpdadeSchema), contactsController.updateContactById);
 

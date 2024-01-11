@@ -1,3 +1,9 @@
+import fs from "fs/promises";
+import path from "path";
+import gravatar from "gravatar";
+import jimp from "jimp";
+
+
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -6,6 +12,7 @@ import { HttpError, ctrlWrapper } from "../helpers/index.js";
 
 const { JWT_SECRET } = process.env;
 
+const avatarDir = path.join("public", "avatars");
 
 const signup = async (req, res) => {
     const { email, password } = req.body;
@@ -15,9 +22,14 @@ const signup = async (req, res) => {
         throw HttpError(409, "Email in use");
     }
 
-    const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ ...req.body, password: hashPassword });
-  
+  const hashPassword = await bcrypt.hash(password, 10);
+  const avatarURL = gravatar.url(email);
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
+
     res.status(201).json({
         user: {
             email: newUser.email,
@@ -65,20 +77,43 @@ const getCurrent = async (req, res) => {
 };
 
 
-const signout = async(req, res)=> {
-    const {_id} = req.user;
-    const result = await User.findByIdAndUpdate(_id, { token: "" });
+const signout = async (req, res) => {
+  const { _id } = req.user;
+  const result = await User.findByIdAndUpdate(_id, { token: "" });
 
   if (!result) {
     throw HttpError(404, 'Not found');
   }
   res.status(204).json({});
-}
+};
+
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+
+  if (!req.file) throw HttpError(400, "missing field avatar");
+
+  const { path: tempUpload, originalname } = req.file;
+  await jimp.read(tempUpload).then((img) =>
+    img.resize(250, 250).write(`${tempUpload}`)
+  );
+
+  const filename = `${Date.now()}-${originalname}`;
+  const resultUpload = path.join(avatarDir, filename);
+  await fs.rename(tempUpload, resultUpload);
+
+  const avatarURL = path.join("avatars", filename);
+  await User.findByIdAndUpdate(_id, { avatarURL });
+
+  if (!avatarURL) throw HttpError(401, "Unauthorized");
+
+  res.json({ avatarURL });
+};
 
 
 export default {
-    signup: ctrlWrapper(signup),
+  signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
-    signout: ctrlWrapper(signout),
+  signout: ctrlWrapper(signout),
+  updateAvatar: ctrlWrapper(updateAvatar),
 }
