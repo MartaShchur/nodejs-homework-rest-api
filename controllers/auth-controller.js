@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import gravatar from "gravatar";
-import jimp from "jimp";
+import Jimp from "jimp";
 
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
@@ -11,7 +11,7 @@ import { HttpError, ctrlWrapper } from "../helpers/index.js";
 
 const { JWT_SECRET } = process.env;
 
-const avatarPath = path.join("public", "avatars");
+const avatarDir = path.join("public", "avatars");
 
 const signup = async (req, res) => {
     const { email, password } = req.body;
