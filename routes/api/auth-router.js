@@ -27,7 +27,7 @@ authRouter.get("/current",
   authController.getCurrent);
 
 authRouter.post("/signout", authenticate, authController.signout);
-authRouter.patch("/avatars",upload.single("avatar"),authenticate,authController.updateAvatar)
+authRouter.patch("/avatars",authenticate, upload.single("avatar"),authController.updateAvatar)
 
 
 
