@@ -3,7 +3,6 @@ import path from "path";
 import gravatar from "gravatar";
 import jimp from "jimp";
 
-
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -12,7 +11,7 @@ import { HttpError, ctrlWrapper } from "../helpers/index.js";
 
 const { JWT_SECRET } = process.env;
 
-const avatarDir = path.join("public", "avatars");
+const avatarPath = path.join("public", "avatars");
 
 const signup = async (req, res) => {
     const { email, password } = req.body;
@@ -93,18 +92,18 @@ const updateAvatar = async (req, res) => {
   if (!req.file) throw HttpError(400, "missing field avatar");
 
   const { path: tempUpload, originalname } = req.file;
-  await jimp.read(tempUpload).then((img) =>
+  await Jimp.read(tempUpload).then((img) =>
     img.resize(250, 250).write(`${tempUpload}`)
   );
 
-  const filename = `${Date.now()}-${originalname}`;
-  const resultUpload = path.join(avatarDir, filename);
+  const fileName = `${_id}_${originalname}`;
+  const resultUpload = path.join(avatarDir, fileName);
   await fs.rename(tempUpload, resultUpload);
 
-  const avatarURL = path.join("avatars", filename);
+  const avatarURL = path.join("avatars", fileName);
   await User.findByIdAndUpdate(_id, { avatarURL });
 
-  if (!avatarURL) throw HttpError(401, "Unauthorized");
+  if (!avatarURL) throw HttpError(404, "Not found");
 
   res.json({ avatarURL });
 };
